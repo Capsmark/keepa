@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 import json
 import csv
@@ -30,6 +31,55 @@ def fetch_keepa_data(api_key, domain_id, category_id, range_value):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
 
+    # Function to convert Keepa time to human-readable date
+
+
+def convert_to_human_readable(keepa_time):
+    uncompressed_time = (keepa_time + 21564000) * 60
+    return datetime.utcfromtimestamp(uncompressed_time).strftime('%Y-%m-%d %H:%M:%S')
+
+
+def save_rank_data_to_csv(salesRanks):
+    for category_id, data in salesRanks.items():
+        if data:
+            with open(f'{category_id}_data.csv', 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(["Timestamp", "Value"])
+                for i in range(0, len(data), 2):
+                    if i+1 < len(data):
+                        timestamp = convert_to_human_readable(data[i])
+                        value = data[i+1]
+                        writer.writerow([timestamp, value])
+            print(f'Data has been saved to {category_id}_data.csv')
+
+
+def save_data_to_csv(product_asin, specified_data):
+    index_names = [
+        "AMAZON", "NEW", "USED", "SALES", "LISTPRICE", "COLLECTIBLE",
+        "REFURBISHED", "NEW_FBM_SHIPPING", "LIGHTNING_DEAL", "WAREHOUSE",
+        "NEW_FBA", "COUNT_NEW", "COUNT_USED", "COUNT_REFURBISHED", "COUNT_COLLECTIBLE",
+        "EXTRA_INFO_UPDATES", "RATING", "COUNT_REVIEWS", "BUY_BOX_SHIPPING",
+        "USED_NEW_SHIPPING", "USED_VERY_GOOD_SHIPPING", "USED_GOOD_SHIPPING",
+        "USED_ACCEPTABLE_SHIPPING", "COLLECTIBLE_NEW_SHIPPING", "COLLECTIBLE_VERY_GOOD_SHIPPING",
+        "COLLECTIBLE_GOOD_SHIPPING", "COLLECTIBLE_ACCEPTABLE_SHIPPING", "REFURBISHED_SHIPPING",
+        "EBAY_NEW_SHIPPING", "EBAY_USED_SHIPPING", "TRADE_IN", "RENTAL", "BUY_BOX_USED_SHIPPING",
+        "PRIME_EXCL"
+    ]
+
+    # Save the data to multiple CSV files based on the index
+    for index, data in enumerate(specified_data):
+        if data is not None:
+            with open(f'./csv/{product_asin}_{index_names[index]}.csv', 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(["Timestamp", "Value"])
+                for i in range(0, len(data), 2):
+                    if i+1 < len(data):
+                        timestamp = convert_to_human_readable(data[i])
+                        value = data[i+1]
+                        writer.writerow([timestamp, value])
+    print(
+        f'Data has been saved to multiple CSV files with prefix {product_asin}')
+
 
 def fetch_keepa_product_data(api_key, product_asin, data_type=0):
     """
@@ -43,6 +93,7 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
     Returns:
     None
     """
+
     try:
         # Step 1: Make an API call to Keepa API with necessary parameters
         response = requests.get(
@@ -53,27 +104,24 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
             json.dump(response_data, file, indent=4)
 
         # Step 2: Access the specified type of data from the response data
-        if 'csv' in response_data:
-            specified_data = response_data['products'][0]['csv']
+        specified_data = response_data['products'][0]['csv']
 
-            # Step 3: Save the data to a CSV file
-            with open(f'{product_asin}_data.csv', 'w', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(["Timestamp", "Price"])
-                for record in specified_data:
-                    writer.writerow(record)
-            print(f'Data has been saved to {product_asin}_data.csv')
-        else:
-            print('CSV data not found in the response data.')
+        # Step 3: Calling function to save data to CSV
+        save_data_to_csv(product_asin, specified_data)
+
+        specified_rank_data = response_data['products'][0]['salesRanks']
+
+        save_rank_data_to_csv(specified_rank_data)
+
     except Exception as e:
         print(f'An error occurred: {e}')
 
 
 def main():
-    fetch_keepa_data(
-        "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "283155", 0)
-    # fetch_keepa_product_data(
-    #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B075ZX9G4H')
+    # fetch_keepa_data(
+    #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "283155", 0)
+    fetch_keepa_product_data(
+        '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B075ZX9G4H')
 
 
 if __name__ == "__main__":
