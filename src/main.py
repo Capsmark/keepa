@@ -12,6 +12,7 @@ def fetch_keepa_data(api_key, domain_id, category_id, range_value):
             "key": api_key,
             "domain": domain_id,
             "category": category_id,
+            "range": range_value
         }
 
         # Make the request to the Keepa API
@@ -118,10 +119,10 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
 
 
 def main():
-    # fetch_keepa_data(
-    #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "283155", 0)
-    fetch_keepa_product_data(
-        '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B075ZX9G4H')
+    fetch_keepa_data(
+        "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "1055398", 180)
+    # fetch_keepa_product_data(
+    #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B00OHUQN3M')
 
 
 if __name__ == "__main__":
