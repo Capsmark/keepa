@@ -29,6 +29,8 @@ def fetch_keepa_data(api_key, domain_id, category_id, range_value):
             json.dump(data, file, indent=4)
 
         print("Data saved to keepa_response.json")
+
+        return data['bestSellersList']['asinList']
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
 
@@ -38,6 +40,14 @@ def fetch_keepa_data(api_key, domain_id, category_id, range_value):
 def convert_to_human_readable(keepa_time):
     uncompressed_time = (keepa_time + 21564000) * 60
     return datetime.utcfromtimestamp(uncompressed_time).strftime('%Y-%m-%d %H:%M:%S')
+
+# Convert human-readable date to Keepa Time
+
+
+def convert_to_keepa_time(date_string):
+    human_time = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+    keepa_time = (human_time.timestamp() // 60) - 21564000
+    return int(keepa_time)
 
 
 def save_rank_data_to_csv(salesRanks):
@@ -118,9 +128,54 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
         print(f'An error occurred: {e}')
 
 
+def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
+    base_url = "https://api.keepa.com/query?domain={}&key={}"
+
+    # Convert human-readable date to Keepa Time
+    trackingSince_lte = convert_to_keepa_time(trackingSince_lte_date)
+
+    results = []
+    page = 0
+    per_page = 50
+
+    while True:
+        query_json = {
+            "rootCategory": rootCategory,
+            "current_COUNT_REVIEWS_gte": 1000,
+            "trackingSince_lte": trackingSince_lte,
+            "perPage": per_page,
+            "page": page
+        }
+
+        response = requests.post(base_url.format(
+            domain_id, access_key), json=query_json)
+        data = response.json()
+
+        print(data)
+
+        # Check if there are more pages to fetch
+        if len(data["asinList"]) < per_page:
+            break
+        page += 1
+
+    # Save to JSON file
+    with open('./out/results.json', 'w') as f:
+        json.dump(results, f)
+
+    print("Results saved in results.json")
+    print("Total results:", len(results))
+
+
 def main():
-    fetch_keepa_data(
-        "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "1055398", 180)
+    access_key = "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r"
+    domain_id = 1
+    rootCategory = 1055398
+    trackingSince_lte_date = "2022-01-01 00:00:00"
+    fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
+
+    # asnList = fetch_keepa_data(
+    #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "1055398", 180)
+
     # fetch_keepa_product_data(
     #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B00OHUQN3M')
 
