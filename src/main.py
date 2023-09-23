@@ -141,7 +141,8 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
     while True:
         query_json = {
             "rootCategory": rootCategory,
-            "current_COUNT_REVIEWS_gte": 1000,
+            # "current_COUNT_REVIEWS_gte": 1000,
+            "current_AMAZON_gte": 10,
             "trackingSince_lte": trackingSince_lte,
             "perPage": per_page,
             "page": page
