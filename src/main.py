@@ -179,6 +179,10 @@ def main():
 
     # fetch_keepa_product_data(
     #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B00OHUQN3M')
+    # fetch_keepa_data(
+    #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "283155", 0)
+    fetch_keepa_product_data(
+        '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', '150118315X')
 
 
 if __name__ == "__main__":
