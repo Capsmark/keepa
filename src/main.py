@@ -135,13 +135,13 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
     trackingSince_lte = convert_to_keepa_time(trackingSince_lte_date)
 
     results = []
-    page = 0
-    per_page = 50
+    page = 84
+    per_page = 100
 
     while True:
         query_json = {
             "rootCategory": rootCategory,
-            # "current_COUNT_REVIEWS_gte": 1000,
+            "current_COUNT_REVIEWS_gte": 1000,
             "current_AMAZON_gte": 10,
             "trackingSince_lte": trackingSince_lte,
             "perPage": per_page,
@@ -152,10 +152,15 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
             domain_id, access_key), json=query_json)
         data = response.json()
 
-        print(data)
+        results.extend(data['asinList'])
 
-        # Check if there are more pages to fetch
-        if len(data["asinList"]) < per_page:
+        try:
+            if len(data["asinList"]) < per_page:
+                print(f"Total Results : {data['totalResults']}")
+                break
+        except KeyError:
+            # Handle the case when "asinList" key is missing
+            print(f"Total Results : {data['totalResults']}")
             break
         page += 1
 
@@ -171,7 +176,7 @@ def main():
     access_key = "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r"
     domain_id = 1
     rootCategory = 1055398
-    trackingSince_lte_date = "2022-01-01 00:00:00"
+    trackingSince_lte_date = "2014-01-01 00:00:00"
     fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
 
     # asnList = fetch_keepa_data(
@@ -181,8 +186,8 @@ def main():
     #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', 'B00OHUQN3M')
     # fetch_keepa_data(
     #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "283155", 0)
-    fetch_keepa_product_data(
-        '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', '150118315X')
+    # fetch_keepa_product_data(
+    #     '160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', '150118315X')
 
 
 if __name__ == "__main__":
