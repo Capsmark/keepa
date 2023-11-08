@@ -135,8 +135,8 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
     trackingSince_lte = convert_to_keepa_time(trackingSince_lte_date)
 
     results = []
-    page = 84
-    per_page = 100
+    page = 0
+    per_page = 1000
 
     while True:
         query_json = {
