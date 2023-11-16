@@ -85,3 +85,5 @@ wheel=0.38.4=py311h06a4308_0
 wsproto=1.2.0=pypi_0
 xz=5.4.2=h5eee18b_0
 zlib=1.2.13=h5eee18b_0
+
+requests~=2.31.0

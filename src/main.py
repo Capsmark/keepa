@@ -141,6 +141,7 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
     while True:
         query_json = {
             "rootCategory": rootCategory,
+            # "categories_include": [3741181],
             "current_COUNT_REVIEWS_gte": 1000,
             "current_AMAZON_gte": 10,
             "trackingSince_lte": trackingSince_lte,
@@ -152,32 +153,32 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
             domain_id, access_key), json=query_json)
         data = response.json()
 
-        results.extend(data['asinList'])
-
         try:
+            results.extend(data['asinList'])
+
             if len(data["asinList"]) < per_page:
                 print(f"Total Results : {data['totalResults']}")
                 break
         except KeyError:
             # Handle the case when "asinList" key is missing
-            print(f"Total Results : {data['totalResults']}")
+            print("No More Data Available")
             break
         page += 1
 
     # Save to JSON file
-    with open('./out/results.json', 'w') as f:
+    with open(f'../out/results_{rootCategory}.json', 'w') as f:
         json.dump(results, f)
 
-    print("Results saved in results.json")
+    print("Results saved in results_7141123011.json")
     print("Total results:", len(results))
 
 
 def main():
     access_key = "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r"
     domain_id = 1
-    rootCategory = 1055398
+    rootCategory = 228013
     trackingSince_lte_date = "2014-01-01 00:00:00"
-    fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
+    # fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
 
     # asnList = fetch_keepa_data(
     #     "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r", 1, "1055398", 180)
