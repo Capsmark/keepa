@@ -3,8 +3,11 @@
 *.log
 
 .idea
+/.idea
+/.idea/
 
 ./out
 /out/
+/out/*
 /out/products
 /out/products/
