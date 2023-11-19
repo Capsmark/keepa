@@ -6,7 +6,7 @@ import os
 
 
 def get_asin_numbers():
-    with open('../out/results_7141123011.json', 'r') as file:
+    with open('./out/results_7141123011.json', 'r') as file:
         data = json.load(file)
 
     return data
@@ -125,7 +125,7 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
             f'https://api.keepa.com/product?key={api_key}&domain=1&asin={product_asin}')
         response_data = response.json()
 
-        with open(f'../out/products/{product_asin}.json', 'w') as file:
+        with open(f'./out/products/{product_asin}.json', 'w') as file:
             json.dump(response_data, file, indent=4)
 
         # # Step 2: Access the specified type of data from the response data
@@ -180,7 +180,7 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
         page += 1
 
     # Save to JSON file
-    with open(f'../out/results_{rootCategory}.json', 'w') as f:
+    with open(f'./out/results_{rootCategory}.json', 'w') as f:
         json.dump(results, f)
 
     print(f"Results saved in results_{rootCategory}.json")
@@ -191,7 +191,7 @@ def main():
     asins = get_asin_numbers()
 
     for id in asins:
-        directory_path = '../out/products'
+        directory_path = './out/products'
         file_name_to_check = f'{id}.json'
 
         if check_file_exists(directory_path, file_name_to_check):
