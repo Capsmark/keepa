@@ -2,4 +2,9 @@
 
 *.log
 
+.idea
+
 ./out
+/out/
+/out/products
+/out/products/
