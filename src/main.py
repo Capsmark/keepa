@@ -5,8 +5,8 @@ import csv
 import os
 
 
-def get_asin_numbers():
-    with open('./out/results_7141123011.json', 'r') as file:
+def get_asin_numbers(asin):
+    with open(f'./out/results_{asin}.json', 'r') as file:
         data = json.load(file)
 
     return data
@@ -188,7 +188,7 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
 
 
 def main():
-    asins = get_asin_numbers()
+    asins = get_asin_numbers(15684181)
 
     for id in asins:
         directory_path = './out/products'
