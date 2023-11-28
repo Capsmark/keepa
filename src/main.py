@@ -126,7 +126,7 @@ def fetch_keepa_product_data(api_key, product_asin, data_type=0):
             f'https://api.keepa.com/product?key={api_key}&domain=1&asin={product_asin}')
         response_data = response.json()
 
-        with open(f'./out/products/{product_asin}.json', 'w') as file:
+        with open(f'./products/{product_asin}.json', 'w') as file:
             json.dump(response_data, file, indent=4)
 
         # # Step 2: Access the specified type of data from the response data
@@ -192,7 +192,7 @@ def main():
     asins = get_asin_numbers(15684181)
 
     for id in asins:
-        directory_path = './out/products'
+        directory_path = './products'
         file_name_to_check = f'{id}.json'
 
         if check_file_exists(directory_path, file_name_to_check):
