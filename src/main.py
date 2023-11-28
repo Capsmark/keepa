@@ -7,7 +7,7 @@ import os
 
 def get_asin_numbers(asin):
     print(f'ASIN: {asin}\n')
-    with open(f'./out/results_{asin}.json', 'r') as file:
+    with open(f'./results/results_{asin}.json', 'r') as file:
         data = json.load(file)
 
     return data
