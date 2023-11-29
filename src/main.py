@@ -157,7 +157,7 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
         query_json = {
             "rootCategory": rootCategory,
             # "categories_include": [3741181],
-            "current_COUNT_REVIEWS_gte": 1000,
+            "current_COUNT_REVIEWS_gte": 100,
             "current_AMAZON_gte": 10,
             "trackingSince_lte": trackingSince_lte,
             "perPage": per_page,
@@ -181,7 +181,7 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
         page += 1
 
     # Save to JSON file
-    with open(f'./out/results_{rootCategory}.json', 'w') as f:
+    with open(f'../results/results_{rootCategory}.json', 'w') as f:
         json.dump(results, f)
 
     print(f"Results saved in results_{rootCategory}.json")
@@ -189,24 +189,23 @@ def fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id):
 
 
 def main():
-    asins = get_asin_numbers(15684181)
+    # asins = get_asin_numbers(15684181)
+    #
+    # for id in asins:
+    #     directory_path = './products'
+    #     file_name_to_check = f'{id}.json'
+    #
+    #     if check_file_exists(directory_path, file_name_to_check):
+    #         print(f"The file '{file_name_to_check}' exists in the directory.")
+    #         continue
+    #     print(f"Fetching: '{file_name_to_check}'")
+    #     fetch_keepa_product_data('160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', id)
 
-    for id in asins:
-        directory_path = './products'
-        file_name_to_check = f'{id}.json'
-
-        if check_file_exists(directory_path, file_name_to_check):
-            print(f"The file '{file_name_to_check}' exists in the directory.")
-            continue
-        print(f"Fetching: '{file_name_to_check}'")
-        fetch_keepa_product_data('160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r', id)
-
-
-# access_key = "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r"
-# domain_id = 1
-# rootCategory = 228013
-# trackingSince_lte_date = "2014-01-01 00:00:00"
-# fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
+    access_key = "160gfpn5t9g8sqt0m239kdpg1fcutu85q667od7q96b8csvgaeqc8ktndl8ial9r"
+    domain_id = 1
+    rootCategory = 2619525011
+    trackingSince_lte_date = "2019-01-01 00:00:00"
+    fetch_products(rootCategory, trackingSince_lte_date, access_key, domain_id)
 
 
 # asnList = fetch_keepa_data(
