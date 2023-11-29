@@ -5,7 +5,7 @@ import json
 from pymongo import MongoClient
 
 ROOT_CATEGORY = '12312312312'
-DIR_PATH = '../out/products'
+DIR_PATH = './products'
 
 
 def get_json_files(path):
